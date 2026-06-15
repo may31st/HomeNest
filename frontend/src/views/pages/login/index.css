@@ -1,0 +1,55 @@
+.login{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+.left-element{
+    width: 50%;
+    flex-direction: column; /* Nếu nội dung có nhiều dòng */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    text-align: center;
+    margin-top: 50px;
+    position: relative;
+}
+.right-element{
+    width: 50%;
+}
+.title {
+    font-size: 30px;
+    font-weight: bold;
+}
+p{
+    color:#636364;
+}
+.form-input {
+    text-align: left;    /* Căn chữ sang trái */
+    margin-bottom: 2px;
+}
+.forgot-password {
+    position: absolute;
+    right: 0;
+    color: black;  /* Màu chữ, có thể thay đổi */
+    text-decoration: none; /* Loại bỏ gạch chân */
+    margin-bottom: 10px ;
+}
+
+.login .left-element .ant-form {
+    margin-left: 30px; /* Nếu cần, loại bỏ margin mặc định của form */
+}
+.social-button{
+    background-color:white; 
+    border: 1px solid #999b99; /* Viền màu vàng */
+    width:500px;
+}
+.button2{
+    color:black;
+    width:500px;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}

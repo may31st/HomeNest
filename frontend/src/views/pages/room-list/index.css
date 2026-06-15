@@ -1,0 +1,110 @@
+.room-list-page {
+    background-color: #f8fafc;
+    min-height: 100vh;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    padding-bottom: 60px;
+}
+
+/* Banner section */
+.list-banner {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    padding: 60px 20px;
+    text-align: center;
+    border-bottom: 1px solid #a5d6a7;
+}
+
+.list-banner-content h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e3a1e;
+    margin-bottom: 10px;
+}
+
+.list-banner-content p {
+    font-size: 16px;
+    color: #4b6b4b;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Anchor Navigation Bar */
+.anchor-nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.anchor-nav-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.anchor-btn {
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    border-color: #cbd5e1 !important;
+    color: #475569 !important;
+    transition: all 0.3s ease !important;
+}
+
+.anchor-btn:hover {
+    border-color: #2e7d32 !important;
+    color: #2e7d32 !important;
+    background-color: #f0fdf4 !important;
+    transform: translateY(-1px);
+}
+
+/* Categories List Container */
+.categories-container {
+    max-width: 1200px;
+    margin: 40px auto 0 auto;
+    padding: 0 20px;
+}
+
+.list-category-section {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f1f5f9;
+    scroll-margin-top: 140px; /* offset for sticky header & nav bar */
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.category-icon {
+    font-size: 28px;
+}
+
+.category-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.category-line {
+    flex-grow: 1;
+    height: 3px;
+    background: linear-gradient(to right, #4caf4f 0%, #e2e8f0 100%);
+    border-radius: 2px;
+}

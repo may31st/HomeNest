@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Agbalumo:wght@400;700&display=swap");
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f4ffe8; /* green-50 */
+  margin-top: 0px;
+  padding: 0.5rem 2rem;
+  border-bottom: 1px solid #d2cfcf;
+}
+
+header .logo {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+header nav {
+  display: flex;
+  gap: 8rem;
+}
+
+header nav a {
+  color: black;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: "Poppins", sans-serif;
+  margin-top: 7px;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+header .language-selector {
+  position: relative;
+}
+
+header .language-selector button {
+  color: black;
+}
+
+header .language-selector .dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 12rem;
+  background-color: white;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+header .language-selector .dropdown a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: black;
+}
+
+header .language-selector .dropdown a:hover {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  background-color: #f4ffe8;
+}
+
+/* Phần văn bản bên phải */
+.rightLand {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.titleLand {
+  font-size: 64px;
+  font-weight: bold;
+  color: black;
+  font-family: "Agbalumo", sans-serif;
+}
+
+.titleLand span {
+  color: #16a34a;
+  font-family: "Agbalumo", sans-serif;
+}
+
+.rightLand p {
+  margin-top: 1rem;
+  font-size: 15px;
+  color: #979696;
+  line-height: 1.3;
+  font-family: "Poppins", sans-serif;
+}
+
+.rightLand button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  height: 58px;
+  width: 169px;
+  background-color: #4caf4f;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+}
+
+.rightLand button:hover {
+  background-color: #15803d;
+}
+
+/* Phần hình ảnh bên trái */
+.leftLand {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leftLand .imagesland {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.ant-btn {
+  background-color: #4caf4f; /* Màu vàng */
+  border: none; /* Không có viền */
+  }
+body{
+  height: 100vh;
+}
+
+.landingPage {
+  height: 100vh;
+  overflow: hidden;
+}

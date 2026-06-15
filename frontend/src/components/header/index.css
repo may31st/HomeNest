@@ -1,0 +1,85 @@
+.header {
+    background-color: #E8F5E9;
+    height: 60px;   
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 40px; /* Khoảng cách hợp lý giữa logo và các liên kết */
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.imageHeader {
+    display: flex;
+    align-items: center;
+}
+
+.logo-Header {
+    height: 35px;
+    object-fit: contain;
+    display: block;
+}
+
+.headerText {
+    display: flex;
+    align-items: center;
+}
+
+.BoxHeader {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.signup-header {
+    width: 120px;
+    background-color: #E8F5E9;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+} 
+
+.signup-header .ant-btn span {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+}
+
+.login-header {
+    width: 120px;
+    color: black;
+}
+
+.login-header .ant-btn span {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+}
+
+.push {
+    width: 120px;
+    color: black;
+}
+
+.push .ant-btn span {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+}
+
+.push .ant-btn {
+    background-color: aqua;
+}
+
+.headerButton {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Khoảng cách giữa nút Đăng bài và Avatar */
+}

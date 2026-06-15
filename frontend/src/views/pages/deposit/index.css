@@ -1,0 +1,395 @@
+/* Premium CSS for DepositPage */
+.deposit-page-wrapper {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.deposit-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.deposit-header-sec {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.deposit-page-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.deposit-page-subtitle {
+  font-size: 16px;
+  color: #64748b;
+}
+
+.deposit-grid-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Left Column Styling (Golden Yellow background accent to match requirements) */
+.deposit-left-column {
+  background: #fefcf0; /* Warm golden/yellowish soft background */
+  border: 1px solid #fef08a;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 25px -5px rgba(234, 179, 8, 0.05);
+}
+
+.section-form-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #854d0e; /* Brownish golden text */
+  margin-bottom: 24px;
+  border-bottom: 2px solid #fef08a;
+  padding-bottom: 8px;
+}
+
+/* Input design */
+.deposit-input {
+  border-radius: 8px !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 8px 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+.deposit-input:hover, .deposit-input:focus {
+  border-color: #ca8a04 !important;
+  box-shadow: 0 0 0 2px rgba(202, 138, 4, 0.1) !important;
+}
+
+/* Dob select row */
+.dob-dropdowns-row {
+  margin-bottom: 24px;
+}
+
+.dob-label-hint {
+  display: block;
+  font-weight: 500;
+  color: #854d0e;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.dob-select-group {
+  display: flex;
+  gap: 12px;
+}
+
+.dob-select {
+  border-radius: 8px !important;
+}
+
+/* CCCD Upload Section */
+.cccd-upload-section {
+  margin-bottom: 24px;
+}
+
+.cccd-upload-label {
+  display: block;
+  font-weight: 500;
+  color: #854d0e;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.cccd-upload-box {
+  width: 100%;
+  max-width: 280px;
+  height: 180px;
+  border: 2px dashed #ca8a04;
+  border-radius: 12px;
+  background: #fffdf0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.cccd-upload-box:hover {
+  background: #fef9c3;
+  border-color: #a16207;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ca8a04;
+}
+
+.plus-icon {
+  font-size: 28px;
+  font-weight: 300;
+}
+
+.upload-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cccd-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Contact row */
+.contact-row {
+  display: flex;
+  gap: 16px;
+}
+
+.readOnly-email-box {
+  flex: 1;
+  background: #fef9c3;
+  border: 1px solid #fef08a;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 58px;
+}
+
+.email-label {
+  font-size: 11px;
+  color: #854d0e;
+  font-weight: 600;
+}
+
+.email-value {
+  font-size: 14px;
+  color: #451a03;
+  font-weight: 500;
+}
+
+/* Right Column Styling */
+.deposit-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.deposit-info-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.deposit-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 20px;
+}
+
+/* Room Summary */
+.room-summary-image-wrapper {
+  width: 100%;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.room-summary-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.room-summary-img:hover {
+  transform: scale(1.05);
+}
+
+.room-summary-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.room-summary-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.summary-icon {
+  color: #ca8a04;
+}
+
+/* Deposit Payment Card */
+.deposit-payment-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+}
+
+.deposit-payment-subtitle {
+  color: #64748b;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.deposit-amount-display {
+  font-size: 28px;
+  font-weight: 800;
+  color: #16a34a;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 16px;
+}
+
+/* Payment Gateways */
+.payment-gateways-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gateway-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.gateways-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.gateway-panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.gateway-panel:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.gateway-panel.selected {
+  border-color: #ca8a04;
+  background: #fefdf0;
+}
+
+.gateway-logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.gateway-icon {
+  font-size: 18px;
+  color: #2563eb;
+}
+
+.momo-logo-text {
+  color: #d81b60;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.radio-circle {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.gateway-panel.selected .radio-circle {
+  border-color: #ca8a04;
+}
+
+.gateway-panel.selected .radio-circle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  background: #ca8a04;
+  border-radius: 50%;
+}
+
+/* Action button */
+.deposit-pay-button {
+  width: 100%;
+  height: 48px !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  background: #ca8a04 !important;
+  border-color: #ca8a04 !important;
+  box-shadow: 0 4px 14px rgba(202, 138, 4, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.deposit-pay-button:hover {
+  background: #a16207 !important;
+  border-color: #a16207 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(202, 138, 4, 0.4) !important;
+}
+
+/* Loading container */
+.deposit-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ca8a04;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 992px) {
+  .deposit-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}

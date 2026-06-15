@@ -1,0 +1,57 @@
+.footer{
+    background-color:#E8F5E9 ;
+    /* position: fixed;
+    bottom: 0;
+    left: 0; */
+    width: 100%;
+    height: 350px;
+}
+.imagefooter{
+    display: flex;
+  justify-content: space-between; /* Căn đều */
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+}
+.imagefooter > div {
+    max-width: 25%; /* Đảm bảo chỉ chiếm 1/4 trang */
+    flex-direction: column; /* Sắp xếp nội dung theo chiều dọc */
+    align-items: center; /* Căn giữa nội dung theo chiều ngang */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    margin:50px;
+    margin-bottom:50px;
+  }
+.imagefooter > div:nth-child(1) {
+    flex: 1; /* Phần đầu tiên rộng hơn */
+}
+.imagefooter > div:nth-child(2) {
+    flex: 1; /* Phần này nhỏ hơn */
+}
+.imagefooter > div:nth-child(3) {
+    flex: 1.5; /* Phần này nhỏ hơn */
+}
+.footerSide1{
+    display: flex;
+    justify-content: space-between; /* Căn đều */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+  }
+.footerSide1 > div:nth-child(1) {
+    width: 30%; /* Phần đầu tiên rộng hơn */
+    margin-left:30px;
+    margin-right:30px;
+    padding-right:20px;
+}
+.footerSide1 > div:nth-child(2) {
+    width: 20%; /* Phần đầu tiên rộng hơn */
+}
+.footerSide1 > div:nth-child(3) {
+    width: 20%; /* Phần đầu tiên rộng hơn */
+}
+.footerSide1 > div:nth-child(4) {
+    width: 30%; /* Phần đầu tiên rộng hơn */
+}
+.footerText2{
+    margin-bottom: 10px;
+}
+.footerText2 li{
+    color: #7c7b7b; /* Màu chữ */
+    font-size: 16px; /* Cỡ chữ */
+}

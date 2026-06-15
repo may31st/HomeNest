@@ -1,0 +1,407 @@
+/* CSS cho trang quản lý Dashboard HOMENEST */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f7f9fb;
+  font-family: 'Roboto', sans-serif;
+  color: #333333;
+}
+
+/* 1. SIDEBAR BÊN TRÁI */
+.dashboard-sidebar {
+  width: 260px;
+  background-color: #e8f5e9; /* Màu xanh nhạt theo đúng mẫu hình ảnh */
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  padding-left: 10px;
+}
+
+.brand-logo {
+  font-size: 28px;
+  background: white;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2e7d32;
+  letter-spacing: 0.8px;
+}
+
+.sidebar-menu-title {
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #757575;
+  font-weight: 500;
+  margin-bottom: 15px;
+  padding-left: 12px;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #4e5d6c;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.menu-item:hover {
+  background-color: rgba(46, 125, 50, 0.08);
+  color: #2e7d32;
+}
+
+/* Tab active thiết kế màu đỏ/hồng nhạt bo góc cực đẹp y hệt hình mẫu 4.29 */
+.menu-item.active {
+  background-color: #ff9e9e; /* Tông đỏ/hồng pastel chuẩn hình minh họa */
+  color: #5d1d1d;
+  font-weight: 600;
+}
+
+.menu-icon {
+  font-size: 18px;
+}
+
+.sidebar-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding-top: 20px;
+}
+
+.menu-item.logout {
+  color: #d32f2f;
+}
+
+.menu-item.logout:hover {
+  background-color: rgba(211, 47, 47, 0.08);
+}
+
+/* 2. MAIN CONTENT BÊN PHẢI */
+.dashboard-main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Header */
+.dashboard-header {
+  height: 70px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eef2f5;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  width: 320px;
+  height: 38px;
+  padding: 0 15px;
+  border: 1px solid #e0e0e0;
+  border-right: none;
+  border-radius: 20px 0 0 20px;
+  outline: none;
+  font-size: 14px;
+  color: #333;
+  background-color: #fcfcfc;
+  transition: all 0.3s;
+}
+
+.search-bar input:focus {
+  background-color: #ffffff;
+  border-color: #4caf4f;
+}
+
+.search-btn {
+  height: 38px;
+  width: 48px;
+  background-color: #2e7d32; /* Nút search xanh đậm như hình mẫu */
+  color: white;
+  border: 1px solid #2e7d32;
+  border-radius: 0 20px 20px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.search-btn:hover {
+  background-color: #1b5e20;
+  border-color: #1b5e20;
+}
+
+.header-user-info {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.be-home-btn {
+  font-weight: 500 !important;
+  color: #2e7d32 !important;
+}
+
+.user-avatar-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #f1f8e9;
+  padding: 6px 14px;
+  border-radius: 25px;
+}
+
+.user-name-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #33691e;
+}
+
+.avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #2e7d32;
+  color: white;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* Tab content */
+.dashboard-tab-content {
+  padding: 40px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.content-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+.title-action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+/* Cards */
+.dashboard-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #edf2f6;
+  margin-bottom: 24px;
+}
+
+/* Chart Card */
+.chart-card {
+  padding: 30px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* HOMENEST SVG Chart Styling */
+.homenest-svg-chart-container {
+  display: flex;
+  height: 320px;
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.y-axis-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 40px;
+  font-size: 13px;
+  color: #888;
+  text-align: right;
+  padding-right: 10px;
+  height: 90%;
+}
+
+.chart-bars-area {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 90%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.chart-gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
+  height: 0;
+}
+
+.bar-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 2;
+}
+
+.bar-fill {
+  width: 32px;
+  background-color: #a5d6a7; /* Màu xanh lá nhạt theo đúng mẫu thiết kế */
+  border-radius: 4px 4px 0 0;
+  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.bar-fill:hover {
+  background-color: #81c784;
+}
+
+.bar-tooltip {
+  visibility: hidden;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 10;
+  bottom: 105%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.bar-fill:hover .bar-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bar-label {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  position: absolute;
+  bottom: -32px;
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #666;
+}
+
+.legend-marker {
+  width: 15px;
+  height: 8px;
+  background-color: #a5d6a7;
+  border-radius: 2px;
+}
+
+/* Profile Form styling */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Step Form */
+.step-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 24px;
+}
+
+.form-step-container {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.push-form-card {
+  max-width: 700px;
+  margin: 0 auto;
+}

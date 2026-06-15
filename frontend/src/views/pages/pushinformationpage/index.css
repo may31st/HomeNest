@@ -1,0 +1,15 @@
+.push-paper-information-title{
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    margin-top:20px;
+
+}
+.push-paper-information {
+    width: 80%;
+    margin: 0 auto; /* Căn giữa theo chiều ngang */
+    display: flex;
+    flex-direction: column; /* Xếp các phần tử từ trên xuống dưới */
+    /* align-items: center;  */
+ }
+ 
