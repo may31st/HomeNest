@@ -1,3 +1,0 @@
-echo -e "tôi muốn tìm phòng trọ ở đà nẵng có giá dưới 4 triệu"> queries.txt
-
-
