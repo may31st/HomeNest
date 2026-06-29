@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { createPost, getUserPosts } = require("../queries/postQuery");
+const { createPost, getUserPosts, updatePost } = require("../queries/postQuery");
 const db = require("../models/index");
 const { getLandlord } = require("../queries/roomQuery");
 
@@ -124,7 +124,9 @@ const toggleStatusController = async (req, res) => {
 
 const getAllPostsController = async (req, res) => {
     try {
-        const rooms = await db.Room.findAll();
+        const rooms = await db.Room.findAll({
+            order: [['id', 'DESC']]
+        });
         const results = [];
         for (const room of rooms) {
             const post = await db.RentPost.findOne({ where: { room_id: room.id } });
@@ -163,6 +165,8 @@ const getAllPostsController = async (req, res) => {
                 address: room.address,
                 status: room.status,
                 room_images: room.room_images,
+                bedrooms: room.bedrooms,
+                bathrooms: room.bathrooms,
                 owner_name: owner_name,
                 owner_email: owner_email,
                 owner_phone: owner_phone
@@ -181,10 +185,32 @@ const getAllPostsController = async (req, res) => {
     }
 };
 
+const updatePostController = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const postData = req.body;
+        if (!id || !postData) {
+            return res.status(400).json({ error: "Dữ liệu đầu vào không hợp lệ" });
+        }
+
+        const result = await updatePost(id, postData);
+
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error("Lỗi khi cập nhật bài đăng:", error);
+        return res.status(500).json({
+            success: false,
+            error: "Đã xảy ra lỗi khi cập nhật bài đăng. Vui lòng thử lại!"
+        });
+    }
+};
+
 module.exports = {
     createPostController,
     getUserPostsController,
     deletePostController,
     toggleStatusController,
-    getAllPostsController
+    getAllPostsController,
+    updatePostController
 };
+

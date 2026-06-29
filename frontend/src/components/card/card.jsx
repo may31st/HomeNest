@@ -3,13 +3,52 @@ import coursImage from "../../assets/images/cours.jpg";
 import { useState, useEffect } from "react";
 import { listHomeInformation } from "../../api/requestHomeApi";
 import { Link } from "react-router-dom";
-import { Pagination } from "antd";
+import { Pagination, message } from "antd";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import "./card.css";
 
-function MediaCard({ typeFilter, searchKeyword, priceFilter }) {
+function MediaCard({ typeFilter, searchKeyword, priceFilter, favoritesOnly, onFavoritesChange }) {
   const [listHome, setListHome] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 6; // 3 columns x 2 rows per page
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+    setFavorites(favs);
+  }, []);
+
+  const isFavorited = (roomId) => {
+    return favorites.includes(roomId) || favorites.includes(String(roomId)) || favorites.includes(Number(roomId));
+  };
+
+  const toggleFavorite = (roomId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const isLoggedIn = !!sessionStorage.getItem("auth");
+    if (!isLoggedIn) {
+      message.warning("Vui lòng đăng nhập để lưu phòng yêu thích!");
+      return;
+    }
+
+    let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const numId = Number(roomId);
+    const hasFav = favs.includes(numId) || favs.includes(roomId);
+
+    if (hasFav) {
+      favs = favs.filter((id) => id !== numId && id !== roomId);
+      message.success("Đã xóa khỏi danh sách yêu thích");
+    } else {
+      favs.push(numId);
+      message.success("Đã thêm vào danh sách yêu thích!");
+    }
+    localStorage.setItem("favorites", JSON.stringify(favs));
+    setFavorites(favs);
+    if (onFavoritesChange) {
+      onFavoritesChange(favs);
+    }
+  };
 
   const fetchListHome = async () => {
     try {
@@ -31,6 +70,14 @@ function MediaCard({ typeFilter, searchKeyword, priceFilter }) {
 
   // Filter listings
   let filteredList = listHome;
+
+  if (favoritesOnly) {
+    filteredList = filteredList.filter(room => 
+      favorites.includes(room.id) || 
+      favorites.includes(String(room.id)) || 
+      favorites.includes(Number(room.id))
+    );
+  }
 
   if (typeFilter) {
     filteredList = filteredList.filter(room => room.type === typeFilter);
@@ -104,7 +151,7 @@ function MediaCard({ typeFilter, searchKeyword, priceFilter }) {
       <div className="mc-grid">
         {paginatedList.map((room, index) => {
           const roomImg = room.room_images && room.room_images.length > 0 ? room.room_images[0] : coursImage;
-          const landlord = getLandlord(room.id);
+          const landlord = room.Owner || getLandlord(room.id);
           return (
             <Link to={`/user/room-details/${room.id}`} key={room.id || index} className="mc-card-link">
               <div className="mc-card">
@@ -112,6 +159,13 @@ function MediaCard({ typeFilter, searchKeyword, priceFilter }) {
                 <div className="mc-img-wrap">
                   <img src={roomImg} alt={room.room_name} className="mc-img" />
                   <span className="mc-badge">Cho thuê</span>
+                  <button className="mc-favorite-btn" onClick={(e) => toggleFavorite(room.id, e)}>
+                    {isFavorited(room.id) ? (
+                      <HeartFilled style={{ color: "#ff4d4f", fontSize: "18px" }} />
+                    ) : (
+                      <HeartOutlined style={{ color: "#7f7f7f", fontSize: "18px" }} />
+                    )}
+                  </button>
                 </div>
 
                 {/* Content */}
@@ -122,10 +176,6 @@ function MediaCard({ typeFilter, searchKeyword, priceFilter }) {
 
                   {/* Specs row */}
                   <div className="mc-specs">
-                    <span>1 phòng ngủ</span>
-                    <span className="mc-spec-dot">·</span>
-                    <span>2 phòng tắm</span>
-                    <span className="mc-spec-dot">·</span>
                     <span>{room.area ? `${room.area}m²` : '20m²'}</span>
                   </div>
 

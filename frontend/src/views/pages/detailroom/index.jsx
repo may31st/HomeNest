@@ -23,6 +23,34 @@ import cours4Image from "../../../assets/images/cours4.jpg";
 
 const DEFAULT_IMAGES = [coursImage, cours2Image, cours3Image, cours4Image];
 
+const landlords = [
+  { name: 'Trần Minh Tuấn', phone: '0912 345 678', email: 'tuan.tran@gmail.com' },
+  { name: 'Nguyễn Thị Hồng', phone: '0987 654 321', email: 'hong.nguyen@gmail.com' },
+  { name: 'Lê Văn Hùng', phone: '0903 112 233', email: 'hung.le@gmail.com' },
+  { name: 'Phạm Thanh Hà', phone: '0976 889 001', email: 'ha.pham@gmail.com' },
+  { name: 'Hoàng Đức Anh', phone: '0918 776 554', email: 'anh.hoang@gmail.com' },
+  { name: 'Vũ Thị Mai Lan', phone: '0933 445 667', email: 'lan.vu@gmail.com' },
+  { name: 'Đặng Quốc Bảo', phone: '0965 321 987', email: 'bao.dang@gmail.com' },
+  { name: 'Bùi Thị Ngọc', phone: '0944 556 778', email: 'ngoc.bui@gmail.com' },
+  { name: 'Ngô Văn Thắng', phone: '0908 223 344', email: 'thang.ngo@gmail.com' },
+  { name: 'Trịnh Thị Phương', phone: '0971 998 887', email: 'phuong.trinh@gmail.com' },
+  { name: 'Đỗ Hoàng Nam', phone: '0922 113 445', email: 'nam.do@gmail.com' },
+  { name: 'Lý Thị Kim Oanh', phone: '0939 667 889', email: 'oanh.ly@gmail.com' },
+  { name: 'Phan Văn Đạt', phone: '0916 778 990', email: 'dat.phan@gmail.com' },
+  { name: 'Mai Thị Thu Hằng', phone: '0955 234 567', email: 'hang.mai@gmail.com' },
+  { name: 'Đinh Công Minh', phone: '0901 445 668', email: 'minh.dinh@gmail.com' },
+  { name: 'Hồ Thị Yến Nhi', phone: '0967 112 334', email: 'nhi.ho@gmail.com' },
+  { name: 'Dương Văn Khải', phone: '0948 998 776', email: 'khai.duong@gmail.com' },
+  { name: 'Tô Thị Bích Ngọc', phone: '0923 556 112', email: 'ngoc.to@gmail.com' },
+  { name: 'Châu Minh Quân', phone: '0979 334 556', email: 'quan.chau@gmail.com' },
+  { name: 'Lương Thị Thanh Tâm', phone: '0911 887 665', email: 'tam.luong@gmail.com' },
+];
+
+const getLandlord = (roomId) => {
+  const idx = (roomId || 0) % landlords.length;
+  return landlords[idx];
+};
+
 const DetailRoom = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -71,11 +99,34 @@ const DetailRoom = () => {
   useEffect(() => {
     fetchRoomData();
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Initialize favorite status from localStorage
+    const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const isFav = favs.includes(Number(id)) || favs.includes(id);
+    setFavorite(isFav);
   }, [id]);
 
   const toggleFavorite = () => {
-    setFavorite((prev) => !prev);
-    message.success(favorite ? "Đã xóa khỏi danh sách yêu thích" : "Đã thêm vào danh sách yêu thích!");
+    const isLoggedIn = !!sessionStorage.getItem("auth");
+    if (!isLoggedIn) {
+      message.warning("Vui lòng đăng nhập để lưu phòng yêu thích!");
+      return;
+    }
+
+    let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const numId = Number(id);
+    const isFav = favs.includes(numId) || favs.includes(id);
+
+    if (isFav) {
+      favs = favs.filter((item) => item !== numId && item !== id);
+      setFavorite(false);
+      message.success("Đã xóa khỏi danh sách yêu thích");
+    } else {
+      favs.push(numId);
+      setFavorite(true);
+      message.success("Đã thêm vào danh sách yêu thích!");
+    }
+    localStorage.setItem("favorites", JSON.stringify(favs));
   };
 
   const handleConsultSubmit = () => {
@@ -140,8 +191,8 @@ const DetailRoom = () => {
 
           {/* Basic specifications row */}
           <div className="room-specs-row">
-            <span className="spec-item">🛏️ 2 phòng ngủ</span>
-            <span className="spec-item">🛁 2 phòng tắm</span>
+            <span className="spec-item">🛏️ {room.bedrooms || 1} phòng ngủ</span>
+            <span className="spec-item">🛁 {room.bathrooms || 1} phòng tắm</span>
             <span className="spec-item">📐 Diện tích: {room.area || 120} m²</span>
           </div>
         </div>
@@ -190,17 +241,17 @@ const DetailRoom = () => {
           <div className="detail-owner-card">
             <div className="owner-card-header">
               <span className="owner-label">Chủ nhà</span>
-              <span className="owner-name">{room.Owner?.name || "Nguyễn Văn A"}</span>
+              <span className="owner-name">{room.Owner?.name || getLandlord(room.id)?.name}</span>
             </div>
             
             <div className="owner-card-body">
               <div className="owner-info-row">
                 <PhoneOutlined className="owner-icon" />
-                <span>{room.Owner?.phone || "09777788"}</span>
+                <span>{room.Owner?.phone || getLandlord(room.id)?.phone}</span>
               </div>
               <div className="owner-info-row">
                 <MailOutlined className="owner-icon" />
-                <span>{room.Owner?.email || "anna@gmail.com"}</span>
+                <span>{room.Owner?.email || getLandlord(room.id)?.email}</span>
               </div>
               <div className="owner-info-row">
                 <CalendarOutlined className="owner-icon" />
@@ -213,7 +264,7 @@ const DetailRoom = () => {
           <div className="detail-cta-buttons">
             <button 
               className="cta-btn consult-btn" 
-              onClick={() => navigate("/user/chat", { state: { receiverEmail: room.Owner?.email || "anna@gmail.com", receiverName: room.Owner?.name } })}
+              onClick={() => navigate("/user/chat", { state: { receiverEmail: room.Owner?.email || getLandlord(room.id)?.email, receiverName: room.Owner?.name || getLandlord(room.id)?.name } })}
             >
               Liên hệ tư vấn
             </button>
@@ -297,6 +348,7 @@ const DetailRoom = () => {
           {relatedRooms.length > 0 ? (
             relatedRooms.map((rel) => {
               const relImg = rel.room_images && rel.room_images.length > 0 ? rel.room_images[0] : coursImage;
+              const relLandlord = rel.Owner || getLandlord(rel.id);
               return (
                 <Link to={`/user/room-details/${rel.id}`} key={rel.id} className="related-room-card">
                   <div className="rel-card-media">
@@ -307,14 +359,14 @@ const DetailRoom = () => {
                     <h3 className="rel-card-title">{rel.room_name}</h3>
                     <p className="rel-card-price">{rel.price_per_month} triệu/tháng</p>
                     <div className="rel-card-info-footer">
-                      <span>🛏️ 2 PN</span>
-                      <span>🛁 2 WC</span>
                       <span>📐 {rel.area || 120} m²</span>
                     </div>
                     <div className="rel-card-owner-footer">
-                      <img src={coursImage} alt="Owner" className="owner-avatar-mini" />
+                      <div className="owner-avatar-mini" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: "50%", background: "#4caf50", color: "white", fontWeight: "bold", fontSize: 14 }}>
+                        {relLandlord?.name?.charAt(0)}
+                      </div>
                       <div className="owner-meta-mini">
-                        <h4>{rel.Owner?.name || "Nguyễn Văn A"}</h4>
+                        <h4>{relLandlord?.name}</h4>
                         <p>Chủ nhà</p>
                       </div>
                     </div>

@@ -87,8 +87,16 @@ const DepositPage = () => {
       const res = await axios.post("http://localhost:8000/api/v1/payment/create-deposit", payload);
       if (res.data && res.data.success) {
         message.success("Khởi tạo đặt cọc thành công! Đang chuyển đến cổng thanh toán...");
-        // Redirect to payment gateway
-        window.location.href = res.data.paymentUrl;
+        // Redirect to payment gateway using React Router (avoid full page reload)
+        const paymentUrl = res.data.paymentUrl;
+        if (paymentUrl && paymentUrl.startsWith("http://localhost:3000")) {
+          // Internal SPA route - use navigate
+          const internalPath = paymentUrl.replace("http://localhost:3000", "");
+          navigate(internalPath);
+        } else {
+          // External URL (real payment gateway)
+          window.location.href = paymentUrl;
+        }
       } else {
         message.error(res.data.error || "Giao dịch đặt cọc thất bại.");
       }

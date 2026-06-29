@@ -15,3 +15,17 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Python
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases
+*.sqlite3
+**/chromaDB/

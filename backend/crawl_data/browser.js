@@ -1,13 +1,26 @@
 const puperteer = require('puppeteer');
+const fs = require('fs');
 
 const startBrowser =  async() => {
     let browser
     try{
-    // Hàm có sẵn để khởi tạo browser 
+    const executablePaths = [
+      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe'
+    ];
+    let execPath = undefined;
+    for (const path of executablePaths) {
+      if (fs.existsSync(path)) {
+        execPath = path;
+        break;
+      }
+    }
+
     browser = await puperteer.launch({
         headless: true,
-        //Chrome sử dụng miltiple để tránh nội dung không đáng tin cậy, nếu muốn dùng cho tất cả các trang thì set như dòng bên dướidưới
-        args: ['--disable-setuid-sandbox'],
+        executablePath: execPath,
+        args: ['--disable-setuid-sandbox', '--no-sandbox'],
         'ignoreHTTPSErrors': true
     })
     

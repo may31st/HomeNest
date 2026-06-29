@@ -42,6 +42,11 @@ const Chat = () => {
     setCurrentUser(parsedUser);
   }, [navigate]);
 
+  // Scroll to top of the page on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Handle initial partner from room detail navigation state
   useEffect(() => {
     if (currentUser && location.state && location.state.receiverEmail) {

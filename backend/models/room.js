@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     area: DataTypes.INTEGER,
     status: DataTypes.STRING,
     room_images: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       get() {
           const raw = this.getDataValue('room_images');
           if (!raw) return []; // Trả về mảng rỗng nếu không có ảnh
@@ -44,6 +44,10 @@ module.exports = (sequelize, DataTypes) => {
     rating: DataTypes.INTEGER,
     type: DataTypes.STRING,
     address : DataTypes.TEXT,
+    latitude: DataTypes.FLOAT,
+    longitude: DataTypes.FLOAT,
+    bedrooms: DataTypes.INTEGER,
+    bathrooms: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Room',

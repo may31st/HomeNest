@@ -83,3 +83,11 @@
     align-items: center;
     gap: 15px; /* Khoảng cách giữa nút Đăng bài và Avatar */
 }
+
+.notification-item-hover:hover {
+  background-color: #f1f5f9;
+}
+
+.heart-icon-hover:hover {
+  transform: scale(1.2);
+}

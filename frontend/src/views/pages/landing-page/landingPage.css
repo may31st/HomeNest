@@ -68,6 +68,7 @@ main {
   justify-content: space-between;
   padding: 2rem;
   background-color: #f4ffe8;
+  flex: 1;
 }
 
 /* Phần văn bản bên phải */
@@ -142,4 +143,7 @@ body{
 .landingPage {
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4ffe8;
 }

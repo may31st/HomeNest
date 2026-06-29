@@ -14,7 +14,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 const { Option } = Select;
 
 const addressOptions = [
-  { value: '', label: 'Tất cả' },
+  { value: '', label: 'Địa điểm' },
   { value: 'Hoàn Kiếm', label: 'Hoàn Kiếm' },
   { value: 'Ba Đình', label: 'Ba Đình' },
   { value: 'Đống Đa', label: 'Đống Đa' },
@@ -30,7 +30,7 @@ const addressOptions = [
 ];
 
 const typeOptions = [
-  { value: '', label: 'Tất cả' },
+  { value: '', label: 'Kiểu' },
   { value: 'phongtro', label: 'Phòng trọ' },
   { value: 'nhanguyencan', label: 'Nhà nguyên căn' },
   { value: 'canhodichvu', label: 'Căn hộ dịch vụ' },
@@ -38,7 +38,7 @@ const typeOptions = [
 ];
 
 const priceOptions = [
-  { value: '', label: 'Tất cả' },
+  { value: '', label: 'Giá' },
   { value: 'under2', label: 'Dưới 2 triệu' },
   { value: '2to5', label: '2 - 5 triệu' },
   { value: '5to10', label: '5 - 10 triệu' },
@@ -83,7 +83,7 @@ const HomePage = () => {
     <div>
       <div className="home">
         <div className="carousel-container">
-          <CarouselComponent images={images} width="100%" height="90vh" />
+          <CarouselComponent images={images} width="100%" height="80vh" />
 
           {/* ===== REDESIGNED SEARCH BAR ===== */}
           <div className="search-overlay">

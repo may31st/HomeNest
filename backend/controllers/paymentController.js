@@ -69,19 +69,28 @@ const createDeposit = async (req, res) => {
       });
     }
 
-    // 3. Tìm hoặc tạo tài khoản Landlord dựa theo roomQuery
-    const landlordInfo = getLandlord(roomId);
-    let landlordUser = await db.User.findOne({ where: { email: landlordInfo.email } });
+    // 3. Tìm tài khoản Landlord thực tế từ RentPost của phòng
+    let landlordUser = null;
+    const rentPost = await db.RentPost.findOne({ where: { room_id: roomId } });
+    if (rentPost && rentPost.user_id) {
+      landlordUser = await db.User.findByPk(rentPost.user_id);
+    }
+
+    // Nếu không tìm thấy chủ trọ thực tế, dùng landlord mặc định (dummy)
     if (!landlordUser) {
-      landlordUser = await db.User.create({
-        email: landlordInfo.email,
-        password: "123",
-        firstName: landlordInfo.name,
-        lastName: "",
-        role: "user",
-        phone_number: parseInt(String(landlordInfo.phone).replace(/\D/g, '')) || 0,
-        address: "Hà Nội"
-      });
+      const landlordInfo = getLandlord(roomId);
+      landlordUser = await db.User.findOne({ where: { email: landlordInfo.email } });
+      if (!landlordUser) {
+        landlordUser = await db.User.create({
+          email: landlordInfo.email,
+          password: "123",
+          firstName: landlordInfo.name,
+          lastName: "",
+          role: "user",
+          phone_number: parseInt(String(landlordInfo.phone).replace(/\D/g, '')) || 0,
+          address: "Hà Nội"
+        });
+      }
     }
 
     // 4. Tạo bản ghi Deposit
@@ -104,21 +113,9 @@ const createDeposit = async (req, res) => {
 
     // 5. Xử lý thanh toán theo phương thức
     if (paymentMethod === 'vnpay') {
-      const returnUrl = `http://localhost:8000/api/v1/payment/vnpay-return`;
-      const paymentUrl = vnpay.buildPaymentUrl({
-        vnp_Amount: amount * 100,
-        vnp_IpAddr:
-          req.headers["x-forwarded-for"] ||
-          req.connection.remoteAddress ||
-          req.socket.remoteAddress ||
-          req.ip,
-        vnp_TxnRef: deposit.id.toString(),
-        vnp_OrderInfo: `Dat coc phong ${room.room_name}`,
-        vnp_OrderType: ProductCode.Other,
-        vnp_ReturnUrl: returnUrl,
-        vnp_Locale: VnpLocale.VN,
-      });
-      return res.json({ success: true, paymentMethod: 'vnpay', paymentUrl });
+      // Dùng trang mock VNPAY local cho môi trường dev (thay vì sandbox thật)
+      const mockPaymentUrl = `http://localhost:3000/user/mock-payment?depositId=${deposit.id}&amount=${amount}&roomName=${encodeURIComponent(room.room_name)}`;
+      return res.json({ success: true, paymentMethod: 'vnpay', paymentUrl: mockPaymentUrl });
     } else {
       // Momo: giả lập thanh toán thành công ngay lập tức
       deposit.payment_status = 'paid';
@@ -130,6 +127,30 @@ const createDeposit = async (req, res) => {
   } catch (error) {
     console.error("Error creating deposit: ", error);
     res.status(500).json({ success: false, error: "Lỗi server", details: error.message });
+  }
+};
+
+// ============================================================
+// Xác nhận thanh toán mock (cho môi trường dev)
+// ============================================================
+const confirmMockPayment = async (req, res) => {
+  try {
+    const { depositId, status } = req.body;
+    if (!depositId) {
+      return res.status(400).json({ success: false, error: "Thiếu depositId" });
+    }
+    const deposit = await db.Deposit.findByPk(depositId);
+    if (!deposit) {
+      return res.status(404).json({ success: false, error: "Không tìm thấy đặt cọc" });
+    }
+    if (status === 'success') {
+      deposit.payment_status = 'paid';
+      await deposit.save();
+    }
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Error confirming mock payment:", error);
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
 
@@ -209,6 +230,11 @@ const approveDeposit = async (req, res) => {
     const landlordUser = await db.User.findByPk(deposit.landlord_id);
     const contractCode = `HD-${deposit.id}-${Math.floor(1000 + Math.random() * 9000)}`;
 
+    const startDate = new Date();
+    const expireDate = new Date();
+    expireDate.setFullYear(expireDate.getFullYear() + 1);
+    const expireDateStr = expireDate.toLocaleDateString("vi-VN");
+
     const terms = `
 ### CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 #### Độc lập - Tự do - Hạnh phúc
@@ -218,7 +244,7 @@ const approveDeposit = async (req, res) => {
 
 Căn cứ Bộ luật Dân sự và Luật Nhà ở hiện hành.
 
-Hôm nay, ngày ${new Date().toLocaleDateString("vi-VN")}, chúng tôi gồm có:
+Hôm nay, ngày ${startDate.toLocaleDateString("vi-VN")}, chúng tôi gồm có:
 
 ### BÊN CHO THUÊ (BÊN A):
 - **Họ và tên:** ${landlordUser ? (landlordUser.firstName || "Chủ trọ") : "Chủ trọ"}
@@ -247,6 +273,7 @@ Diện tích: **${deposit.Room?.area || "N/A"} m²**
 
 ### ĐIỀU 3: THỜI HẠN THUÊ
 Thời hạn thuê: **12 tháng**, tính từ ngày ký hợp đồng.
+Ngày hết hạn thuê: **${expireDateStr}**
 
 ### ĐIỀU 4: QUYỀN VÀ NGHĨA VỤ CÁC BÊN
 - Bên A giao phòng đúng hiện trạng, bảo đảm quyền sử dụng hợp pháp.
@@ -257,7 +284,7 @@ Thời hạn thuê: **12 tháng**, tính từ ngày ký hợp đồng.
 - Bên B tự ý chấm dứt không có lý do chính đáng sẽ mất tiền đặt cọc.
 
 ---
-Hợp đồng được ký điện tử trên nền tảng RENTHOUSE, có giá trị pháp lý.
+Hợp đồng được ký điện tử trên nền tảng HOMENEST, có giá trị pháp lý.
     `.trim();
 
     const contract = await db.Contract.create({
@@ -282,7 +309,8 @@ Hợp đồng được ký điện tử trên nền tảng RENTHOUSE, có giá t
       terms,
       tenant_signed: false,
       landlord_signed: false,
-      status: 'pending'
+      status: 'pending',
+      expire_date: expireDateStr
     });
 
     res.json({ success: true, message: "Phê duyệt thành công, đã tạo hợp đồng điện tử!", contract });
@@ -311,11 +339,56 @@ const rejectDeposit = async (req, res) => {
   }
 };
 
+// ============================================================
+// Khách thuê hủy đặt cọc (Khi đang chờ duyệt)
+// ============================================================
+const cancelDeposit = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deposit = await db.Deposit.findByPk(id, {
+      include: [{ model: db.Room, as: 'Room' }]
+    });
+    if (!deposit) {
+      return res.status(404).json({ success: false, error: "Không tìm thấy thông tin đặt cọc!" });
+    }
+    
+    // Set status to rejected (Từ chối)
+    deposit.status = 'rejected';
+    await deposit.save();
+    
+    res.json({ success: true, message: "Hủy giao dịch đặt cọc thành công!", deposit });
+  } catch (error) {
+    console.error("Error cancelling deposit: ", error);
+    res.status(500).json({ success: false, error: "Lỗi server", details: error.message });
+  }
+};
+
+// ============================================================
+// Xóa lịch sử giao dịch đặt cọc
+// ============================================================
+const deleteDeposit = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deposit = await db.Deposit.findByPk(id);
+    if (!deposit) {
+      return res.status(404).json({ success: false, error: "Không tìm thấy thông tin đặt cọc!" });
+    }
+    await deposit.destroy();
+    res.json({ success: true, message: "Đã xóa lịch sử giao dịch đặt cọc thành công!" });
+  } catch (error) {
+    console.error("Error deleting deposit: ", error);
+    res.status(500).json({ success: false, error: "Lỗi server", details: error.message });
+  }
+};
+
 module.exports = {
   paymentByVnPay,
   paymentReturn,
   createDeposit,
+  confirmMockPayment,
   getDeposits,
   approveDeposit,
-  rejectDeposit
+  rejectDeposit,
+  cancelDeposit,
+  deleteDeposit
 };

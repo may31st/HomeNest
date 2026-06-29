@@ -105,7 +105,7 @@ const LandingPage = () => {
           />
         </div>
         <nav>
-          <Link to="/landing">{t.home}</Link>
+          <Link to="/user/home">{t.home}</Link>
           <a href="#contact" onClick={(e) => { e.preventDefault(); setIsContactOpen(true); }}>
             {t.contactUs}
           </a>

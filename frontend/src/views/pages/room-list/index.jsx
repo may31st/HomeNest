@@ -17,7 +17,7 @@ const RoomListPage = () => {
             <div className="list-banner">
                 <div className="list-banner-content">
                     <h1>Danh sách phòng</h1>
-                    <p>Khám phá các loại hình lưu trú đa dạng, thông tin minh bạch, hình ảnh xác thực 100%</p>
+                    <p>Khám phá các loại hình lưu trú đa dạng, thông tin minh bạch, hình ảnh xác thực </p>
                 </div>
             </div>
 
@@ -26,16 +26,16 @@ const RoomListPage = () => {
                 <div className="anchor-nav-title">Phân loại phòng:</div>
                 <Flex wrap gap={20} className="anchor-nav-flex" justify="center">
                     <Button type="default" size="large" onClick={() => scrollToSection("sec-phongtro")} className="anchor-btn">
-                        🏡 Phòng trọ
+                        Phòng trọ
                     </Button>
                     <Button type="default" size="large" onClick={() => scrollToSection("sec-nhanguyencan")} className="anchor-btn">
-                        🏘️ Nhà nguyên căn
+                        Nhà nguyên căn
                     </Button>
                     <Button type="default" size="large" onClick={() => scrollToSection("sec-canhodichvu")} className="anchor-btn">
-                        🏢 Căn hộ dịch vụ
+                        Căn hộ dịch vụ
                     </Button>
                     <Button type="default" size="large" onClick={() => scrollToSection("sec-chungcumini")} className="anchor-btn">
-                        🏬 Chung cư mini
+                        Chung cư mini
                     </Button>
                 </Flex>
             </div>
@@ -44,9 +44,7 @@ const RoomListPage = () => {
             <div className="categories-container">
                 <div id="sec-phongtro" className="list-category-section">
                     <div className="category-header">
-                        <span className="category-icon">🏡</span>
                         <h2>Danh sách Phòng trọ</h2>
-                        <span className="category-line"></span>
                     </div>
                     <div className="card-list-home-container-Homepage">
                         <MediaCard typeFilter="phongtro" />
@@ -55,9 +53,7 @@ const RoomListPage = () => {
 
                 <div id="sec-nhanguyencan" className="list-category-section">
                     <div className="category-header">
-                        <span className="category-icon">🏘️</span>
                         <h2>Danh sách Nhà nguyên căn</h2>
-                        <span className="category-line"></span>
                     </div>
                     <div className="card-list-home-container-Homepage">
                         <MediaCard typeFilter="nhanguyencan" />
@@ -66,9 +62,7 @@ const RoomListPage = () => {
 
                 <div id="sec-canhodichvu" className="list-category-section">
                     <div className="category-header">
-                        <span className="category-icon">🏢</span>
                         <h2>Danh sách Căn hộ dịch vụ</h2>
-                        <span className="category-line"></span>
                     </div>
                     <div className="card-list-home-container-Homepage">
                         <MediaCard typeFilter="canhodichvu" />
@@ -77,9 +71,7 @@ const RoomListPage = () => {
 
                 <div id="sec-chungcumini" className="list-category-section">
                     <div className="category-header">
-                        <span className="category-icon">🏬</span>
                         <h2>Danh sách Chung cư mini</h2>
-                        <span className="category-line"></span>
                     </div>
                     <div className="card-list-home-container-Homepage">
                         <MediaCard typeFilter="chungcumini" />

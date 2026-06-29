@@ -34,6 +34,7 @@ const getListRoom = async (roomData) => {
       where: {
          status: 'available',
       },
+      order: [['id', 'DESC']]
     });
     const populatedRooms = await Promise.all(existroom.map(async (room) => {
       const roomData = room.toJSON ? room.toJSON() : room;

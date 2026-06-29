@@ -202,6 +202,41 @@
   margin: 0 10px;
 }
 
+.unit-label-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4A154B;
+  padding: 8px 12px;
+  background: #F4EBF7;
+  border-radius: 20px;
+  margin-right: 15px;
+  display: inline-block;
+  text-align: center;
+}
+
+.current-location-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  margin-left: 5px;
+}
+
+.current-location-btn:hover {
+  background: #F4EBF7;
+  transform: scale(1.1);
+}
+
+.current-location-btn:active {
+  transform: scale(0.9);
+}
+
 .search-circle-btn {
   background: #4CAF50;
   border: none;

@@ -8,8 +8,10 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Badge, Popover } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';  
+import { HeartOutlined, BellOutlined, MessageOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -33,6 +35,225 @@ const Header = () => {
     const isLoggedIn = !!authData;
     const user = isLoggedIn ? JSON.parse(authData) : {};
 
+    const [notifications, setNotifications] = React.useState([]);
+    const [readNotifIds, setReadNotifIds] = React.useState([]);
+
+    React.useEffect(() => {
+      if (isLoggedIn && user.email) {
+        try {
+          const stored = localStorage.getItem(`read_notifications_${user.email}`);
+          setReadNotifIds(stored ? JSON.parse(stored) : []);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }, [isLoggedIn, user.email]);
+
+    const unreadNotifications = React.useMemo(() => {
+      return notifications.filter(n => !readNotifIds.includes(n.id));
+    }, [notifications, readNotifIds]);
+
+    const unreadNotifCount = unreadNotifications.length;
+
+    const sortedNotifications = React.useMemo(() => {
+      return [...notifications].sort((a, b) => {
+        const aUnread = !readNotifIds.includes(a.id);
+        const bUnread = !readNotifIds.includes(b.id);
+        if (aUnread && !bUnread) return -1;
+        if (!aUnread && bUnread) return 1;
+        return 0;
+      });
+    }, [notifications, readNotifIds]);
+
+    const fetchNotifications = async () => {
+      if (!isLoggedIn || !user.email) return;
+      try {
+        const notifs = [];
+        // 1. Fetch deposits
+        const resTD = await axios.get(`http://localhost:8000/api/v1/payment/deposits?email=${user.email}&role=tenant`);
+        const resLD = await axios.get(`http://localhost:8000/api/v1/payment/deposits?email=${user.email}&role=landlord`);
+        
+        // 2. Fetch contracts
+        const resTC = await axios.get(`http://localhost:8000/api/v1/contract?email=${user.email}&role=tenant`);
+        const resLC = await axios.get(`http://localhost:8000/api/v1/contract?email=${user.email}&role=landlord`);
+
+        // Process tenant deposits
+        if (resTD.data && resTD.data.success) {
+          resTD.data.deposits.forEach(d => {
+            if (d.status === "approved") {
+              notifs.push({
+                id: `td-app-${d.id}`,
+                text: `Đặt cọc phòng ${d.Room?.room_name || ""} của bạn đã được CHỦ NHÀ ĐỒNG Ý.`,
+                link: "/user/dashboard",
+                tab: "hop_dong"
+              });
+            } else if (d.status === "rejected") {
+              notifs.push({
+                id: `td-rej-${d.id}`,
+                text: `Đặt cọc phòng ${d.Room?.room_name || ""} của bạn đã bị từ chối.`,
+                link: "/user/dashboard",
+                tab: "hop_dong"
+              });
+            }
+          });
+        }
+
+        // Process landlord deposits
+        if (resLD.data && resLD.data.success) {
+          resLD.data.deposits.forEach(d => {
+            if (d.status === "pending" && d.payment_status === "paid") {
+              notifs.push({
+                id: `ld-pend-${d.id}`,
+                text: `Có yêu cầu đặt cọc mới cho phòng ${d.Room?.room_name || ""} đang chờ bạn duyệt.`,
+                link: "/user/dashboard",
+                tab: "hop_dong"
+              });
+            }
+          });
+        }
+
+        // Process tenant contracts
+        if (resTC.data && resTC.data.success) {
+          resTC.data.contracts.forEach(c => {
+            if (!c.tenant_signed) {
+              notifs.push({
+                id: `tc-sign-${c.id}`,
+                text: `Hợp đồng phòng ${c.Room?.room_name || ""} đang chờ bạn ký trực tuyến.`,
+                link: "/user/dashboard",
+                tab: "hop_dong"
+              });
+            }
+          });
+        }
+
+        // Process landlord contracts
+        if (resLC.data && resLC.data.success) {
+          resLC.data.contracts.forEach(c => {
+            if (!c.landlord_signed) {
+              notifs.push({
+                id: `lc-sign-${c.id}`,
+                text: `Hợp đồng phòng ${c.Room?.room_name || ""} đang chờ chủ nhà ký hoàn tất.`,
+                link: "/user/dashboard",
+                tab: "hop_dong"
+              });
+            }
+          });
+        }
+
+        setNotifications(notifs);
+      } catch (error) {
+        console.error("Error fetching header notifications:", error);
+      }
+    };
+
+    React.useEffect(() => {
+      fetchNotifications();
+      const interval = setInterval(fetchNotifications, 15000); // Check every 15s
+      return () => clearInterval(interval);
+    }, [isLoggedIn, user.email]);
+
+    const handleNotificationClick = (notif) => {
+      if (isLoggedIn && user.email) {
+        const updated = [...readNotifIds];
+        if (!updated.includes(notif.id)) {
+          updated.push(notif.id);
+          setReadNotifIds(updated);
+          localStorage.setItem(`read_notifications_${user.email}`, JSON.stringify(updated));
+        }
+      }
+      navigate(notif.link, { state: { tab: notif.tab } });
+    };
+
+    const handleMarkAllAsRead = () => {
+      if (isLoggedIn && user.email) {
+        const allIds = notifications.map(n => n.id);
+        setReadNotifIds(allIds);
+        localStorage.setItem(`read_notifications_${user.email}`, JSON.stringify(allIds));
+      }
+    };
+
+    const notificationContent = (
+      <div style={{ width: 320, maxHeight: 400, display: 'flex', flexDirection: 'column' }}>
+        {notifications.length > 0 && (
+          <div style={{ 
+            padding: '8px 12px', 
+            borderBottom: '1px solid #e2e8f0', 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            background: '#f8fafc'
+          }}>
+            <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 500 }}>
+              Chưa đọc: {unreadNotifCount}
+            </span>
+            <span 
+              onClick={handleMarkAllAsRead}
+              style={{ 
+                fontSize: '12px', 
+                color: '#2563eb', 
+                cursor: 'pointer',
+                fontWeight: 600
+              }}
+            >
+              Đánh dấu tất cả đã đọc
+            </span>
+          </div>
+        )}
+        <div style={{ overflowY: 'auto', flex: 1 }}>
+          {notifications.length === 0 ? (
+            <div style={{ padding: '16px 8px', color: '#64748b', textAlign: 'center' }}>
+              Không có thông báo mới nào
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {sortedNotifications.map((notif) => {
+                const isRead = readNotifIds.includes(notif.id);
+                return (
+                  <div 
+                    key={notif.id}
+                    onClick={() => handleNotificationClick(notif)}
+                    style={{
+                      padding: '12px 14px',
+                      borderBottom: '1px solid #f1f5f9',
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      transition: 'all 0.2s',
+                      background: isRead ? '#ffffff' : '#f0fdf4'
+                    }}
+                    className="notification-item-hover"
+                  >
+                    <div style={{ flex: 1 }}>
+                      <div style={{ 
+                        color: isRead ? '#475569' : '#1e293b', 
+                        fontWeight: isRead ? 400 : 600,
+                        lineHeight: '1.4'
+                      }}>
+                        {notif.text}
+                      </div>
+                      {!isRead && (
+                        <span style={{ 
+                          display: 'inline-block', 
+                          marginTop: '4px',
+                          fontSize: '10px', 
+                          color: '#2e7d32', 
+                          background: '#dcfce7',
+                          padding: '1px 6px',
+                          borderRadius: '10px',
+                          fontWeight: 700
+                        }}>
+                          Mới
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+
     return (
         <div>
             <div className = "header">
@@ -44,6 +265,9 @@ const Header = () => {
                     </Link>
                     <div className="headerText">
                  <Box className ="BoxHeader" sx={{ display: 'flex', alignItems: 'center', gap: '45px' }}>
+                  <Link to="/user/home" className="link">
+                    <Typography sx={{ color:'black', fontWeight: 500, fontSize: '16px', '&:hover': { color: '#2e7d32' } }}>Trang chủ</Typography>
+                  </Link>
                   <Link to="/user/list" className="link">
                     <Typography sx={{ color:'black', fontWeight: 500, fontSize: '16px', '&:hover': { color: '#2e7d32' } }}>Danh sách phòng</Typography>
                   </Link>
@@ -54,6 +278,11 @@ const Header = () => {
                   <Link to="/user/news" className="link">
                     <Typography sx={{ color:'black', fontWeight: 500, fontSize: '16px', '&:hover': { color: '#2e7d32' } }}>Tin tức</Typography>
                   </Link>
+                  {isLoggedIn && (
+                    <Link to="/user/favorites" className="link" style={{ display: 'flex', alignItems: 'center' }} title="Danh sách yêu thích">
+                      <HeartOutlined className="heart-icon-hover" style={{ color: 'black', fontSize: '20px', cursor: 'pointer', transition: 'transform 0.2s' }} />
+                    </Link>
+                  )}
                  </Box>
             <Menu
             anchorEl={anchorEl}
@@ -104,6 +333,33 @@ const Header = () => {
             <div className="headerButton">
             {isLoggedIn ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                {/* Notification Bell */}
+                <Popover 
+                  content={notificationContent} 
+                  title={<span style={{ fontWeight: 700, color: '#1e293b', fontSize: '15px' }}>Thông báo</span>}
+                  trigger="click"
+                  placement="bottomRight"
+                >
+                  <Badge count={unreadNotifCount} size="small" offset={[2, -2]} style={{ backgroundColor: '#ef4444' }}>
+                    <IconButton style={{ padding: 4 }}>
+                      <BellOutlined style={{ fontSize: '22px', color: '#1e293b' }} />
+                    </IconButton>
+                  </Badge>
+                </Popover>
+
+                {/* Chat Message Bubble */}
+                <Badge count={0} size="small" offset={[2, -2]} style={{ backgroundColor: '#ef4444' }}>
+                  <IconButton 
+                    onClick={() => {
+                      window.scrollTo(0, 0);
+                      navigate("/user/chat");
+                    }} 
+                    style={{ padding: 4 }}
+                  >
+                    <MessageOutlined style={{ fontSize: '22px', color: '#1e293b' }} />
+                  </IconButton>
+                </Badge>
+
                 <Button 
                   className="push" 
                   type="primary" 
@@ -164,7 +420,6 @@ const Header = () => {
               <>
                 <Button className="signup-header" type="text" onClick={() => navigate("/login")}>Đăng nhập</Button>
                 <Button className="login-header" type="primary" onClick={() => navigate("/sign-up")}>Đăng ký</Button>
-                <Button className="push" type="primary" onClick={() => navigate("/login")}>Đăng bài</Button>
               </>
             )}
             </div>

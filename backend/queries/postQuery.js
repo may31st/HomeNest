@@ -12,6 +12,9 @@ const createPost = async (postData) => {
         type,
         area,
         address,
+        room_images,
+        bedrooms,
+        bathrooms,
       } = postData;
   
       const result = await db.sequelize.transaction(async (t) => {
@@ -41,6 +44,34 @@ const createPost = async (postData) => {
         }
   
         // 2. Tạo phòng mới
+        let latitude = 10.7797;
+        let longitude = 106.6668;
+        if (address) {
+          try {
+            const token = process.env.MAPBOX_TOKEN;
+            if (!token) {
+              console.warn("WARNING: MAPBOX_TOKEN is missing from environment variables.");
+            }
+
+            const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${token}`;
+            const geoRes = await fetch(geocodeUrl);
+            const geoData = await geoRes.json();
+            if (geoData && geoData.features && geoData.features.length > 0) {
+              const [lng, lat] = geoData.features[0].center;
+              latitude = lat;
+              longitude = lng;
+            } else {
+              // Fallback based on address keywords
+              if (address.toLowerCase().includes("hà nội") || address.toLowerCase().includes("triều khúc") || address.toLowerCase().includes("thanh xuân") || address.toLowerCase().includes("cầu giấy")) {
+                latitude = 21.0285;
+                longitude = 105.8048;
+              }
+            }
+          } catch (err) {
+            console.error("Mapbox geocoding error during createPost:", err);
+          }
+        }
+
         const room = await db.Room.create(
           {
             room_name,
@@ -49,7 +80,12 @@ const createPost = async (postData) => {
             type,
             area,
             address,
+            latitude,
+            longitude,
             status: "available",
+            room_images: room_images || [],
+            bedrooms: type === "phongtro" ? 1 : (parseInt(bedrooms) || 1),
+            bathrooms: type === "phongtro" ? 1 : (parseInt(bathrooms) || 1),
           },
           { transaction: t }
         );
@@ -146,7 +182,10 @@ const getUserPosts = async (email) => {
     const user = await db.User.findOne({ where: { email } });
     if (!user) return [];
     
-    const posts = await db.RentPost.findAll({ where: { user_id: user.id } });
+    const posts = await db.RentPost.findAll({
+      where: { user_id: user.id },
+      order: [['id', 'DESC']]
+    });
     if (posts.length === 0) return [];
     
     const results = [];
@@ -165,6 +204,9 @@ const getUserPosts = async (email) => {
           area: room.area,
           address: room.address,
           status: room.status,
+          room_images: room.room_images,
+          bedrooms: room.bedrooms,
+          bathrooms: room.bathrooms,
         });
       }
     }
@@ -175,7 +217,108 @@ const getUserPosts = async (email) => {
   }
 };
 
+const updatePost = async (postId, postData) => {
+  try {
+    const {
+      room_name,
+      description,
+      price_per_month,
+      type,
+      area,
+      address,
+      room_images,
+      bedrooms,
+      bathrooms,
+    } = postData;
+
+    const result = await db.sequelize.transaction(async (t) => {
+      let post = null;
+      let roomId = postId;
+
+      if (typeof postId === "string" && postId.startsWith("temp-room-")) {
+        roomId = postId.replace("temp-room-", "");
+      } else {
+        post = await db.RentPost.findByPk(postId, { transaction: t });
+        if (post) {
+          roomId = post.room_id;
+        }
+      }
+
+      const room = await db.Room.findByPk(roomId, { transaction: t });
+      if (!room) {
+        throw new Error("Không tìm thấy phòng tương ứng");
+      }
+
+      // Calculate latitude and longitude if address has changed
+      let latitude = room.latitude;
+      let longitude = room.longitude;
+      if (address && address !== room.address) {
+        try {
+          const token = process.env.MAPBOX_TOKEN;
+          if (!token) {
+            console.warn("WARNING: MAPBOX_TOKEN is missing from environment variables.");
+          }
+
+          const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${token}`;
+          const geoRes = await fetch(geocodeUrl);
+          const geoData = await geoRes.json();
+          if (geoData && geoData.features && geoData.features.length > 0) {
+            const [lng, lat] = geoData.features[0].center;
+            latitude = lat;
+            longitude = lng;
+          } else {
+            // Fallback based on address keywords
+            if (address.toLowerCase().includes("hà nội") || address.toLowerCase().includes("triều khúc") || address.toLowerCase().includes("thanh xuân") || address.toLowerCase().includes("cầu giấy")) {
+              latitude = 21.0285;
+              longitude = 105.8048;
+            }
+          }
+        } catch (err) {
+          console.error("Mapbox geocoding error during updatePost:", err);
+        }
+      }
+
+      await db.Room.update(
+        {
+          room_name,
+          description,
+          price_per_month: parseFloat(price_per_month),
+          type,
+          area: parseInt(area),
+          address,
+          latitude,
+          longitude,
+          room_images: room_images || [],
+          bedrooms: type === "phongtro" ? 1 : (parseInt(bedrooms) || 1),
+          bathrooms: type === "phongtro" ? 1 : (parseInt(bathrooms) || 1),
+        },
+        { where: { id: roomId }, transaction: t }
+      );
+
+      if (post) {
+        await db.RentPost.update(
+          {
+            updated_at: new Date(),
+          },
+          { where: { id: post.id }, transaction: t }
+        );
+      }
+
+      return {
+        success: true,
+        message: "Bài đăng đã được cập nhật thành công!"
+      };
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   createPost,
   getUserPosts,
+  updatePost,
 };

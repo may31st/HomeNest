@@ -2,11 +2,16 @@ import React, { useEffect, useRef } from "react";
 import { Box, List, ListItem, Paper, Typography } from "@mui/material";
 
 const ChatArea = ({ activePartnerEmail, messages, loading }) => {
-  const bottomRef = useRef(null);
+  const containerRef = useRef(null);
 
   // Smooth scroll to bottom on new messages
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: containerRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
   }, [messages]);
 
   if (!activePartnerEmail) {
@@ -25,13 +30,16 @@ const ChatArea = ({ activePartnerEmail, messages, loading }) => {
   }
 
   return (
-    <Box sx={{ 
-      height: "80%", 
-      overflowY: "auto", 
-      p: 3, 
-      flex: "1 1 0", 
-      background: "#ffffff" // white/clean background matching mockup
-    }}>
+    <Box 
+      ref={containerRef}
+      sx={{ 
+        height: "80%", 
+        overflowY: "auto", 
+        p: 3, 
+        flex: "1 1 0", 
+        background: "#ffffff" // white/clean background matching mockup
+      }}
+    >
       <List sx={{ p: 0 }}>
         {messages.map((msg, index) => {
           // If the message is from activePartnerEmail, it's a RECEIVED message (left / light gray)
@@ -84,7 +92,6 @@ const ChatArea = ({ activePartnerEmail, messages, loading }) => {
             </ListItem>
           );
         })}
-        <div ref={bottomRef} />
       </List>
     </Box>
   );

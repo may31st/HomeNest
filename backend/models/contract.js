@@ -42,6 +42,10 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.STRING,
       defaultValue: 'pending' // pending, active, terminated
+    },
+    expire_date: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     sequelize,

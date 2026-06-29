@@ -1,0 +1,743 @@
+/* =========================================
+   MOCK VNPAY PAYMENT PAGE
+   ========================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.vnpay-wrapper {
+  min-height: 100vh;
+  background: #fff;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Header ---- */
+.vnpay-header {
+  background: linear-gradient(135deg, #c0000a 0%, #8b0000 100%);
+  color: #fff;
+  padding: 12px 0;
+  box-shadow: 0 2px 12px rgba(192, 0, 10, 0.4);
+}
+
+.vnpay-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vnpay-logo {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -1px;
+}
+
+.logo-vn {
+  color: #fff;
+}
+
+.logo-pay {
+  color: #ffd700;
+}
+
+.vnpay-secure {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ---- Body Layout ---- */
+.vnpay-body {
+  max-width: 920px;
+  margin: 32px auto;
+  padding: 0 16px;
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  flex: 1;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid #e8eaed;
+}
+
+/* ---- Left: Order Panel ---- */
+.vnpay-order-panel {
+  background: #f5f7fa;
+  border-radius: 0;
+  padding: 28px 24px;
+  width: 300px;
+  flex-shrink: 0;
+  border-right: 1px solid #e8eaed;
+}
+
+/* Order panel title */
+.order-panel-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 12px 0;
+}
+
+/* Big amount section */
+.order-amount-section {
+  margin: 14px 0;
+}
+
+.oas-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.oas-amount {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a73e8;
+  line-height: 1.2;
+}
+
+.oas-currency {
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 3px;
+  vertical-align: super;
+}
+
+/* Info rows */
+.order-info-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.oir-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.oir-value {
+  font-size: 14px;
+  color: #222;
+  font-weight: 500;
+}
+
+.oir-mono {
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.oir-bold {
+  font-weight: 700;
+  font-size: 15px;
+  color: #111;
+}
+
+/* Timer row */
+.order-timer-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.order-merchant {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.merchant-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #c0000a, #ff4500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(192, 0, 10, 0.3);
+}
+
+.merchant-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1a1a2e;
+}
+
+.merchant-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.order-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 14px 0;
+}
+
+.order-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.od-label {
+  font-size: 13px;
+  color: #888;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.od-value {
+  font-size: 13px;
+  color: #222;
+  font-weight: 500;
+  text-align: right;
+}
+
+.order-content {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.timer {
+  font-weight: 700;
+  color: #c0000a;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer.danger {
+  color: #ff0000;
+  animation: blink 0.5s step-end infinite alternate;
+}
+
+@keyframes blink {
+  from { opacity: 1; }
+  to { opacity: 0.3; }
+}
+
+.order-amount-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.oa-label {
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.oa-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #c0000a;
+}
+
+.btn-cancel {
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  background: #fff;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 12px;
+}
+
+.btn-cancel:hover {
+  border-color: #c0000a;
+  color: #c0000a;
+  background: #fff5f5;
+}
+
+.order-support {
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.order-support a {
+  color: #c0000a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ---- Right: Payment Panel ---- */
+.vnpay-payment-panel {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 560px;
+}
+
+/* ---- Tabs ---- */
+.payment-tabs {
+  display: flex;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.payment-tab {
+  flex: 1;
+  padding: 16px 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+
+.payment-tab.active {
+  color: #c0000a;
+  border-bottom-color: #c0000a;
+  background: #fff5f5;
+}
+
+.payment-tab:hover:not(.active) {
+  color: #c0000a;
+  background: #fafafa;
+}
+
+.tab-icon {
+  font-size: 20px;
+}
+
+/* ---- QR Panel ---- */
+.qr-panel {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* QR Panel title - matches real VNPAY */
+.qr-panel-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+  margin: 0;
+}
+
+/* VNPAY QR Wrapper */
+.vnpayqr-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* VNPAY QR Brand Header */
+.vnpayqr-brand {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  font-family: "Arial Black", Arial, sans-serif;
+}
+
+.brand-vn {
+  color: #c0000a;
+}
+
+.brand-pay {
+  color: #1a5fb4;
+}
+
+.brand-qr {
+  font-size: 14px;
+  font-weight: 800;
+  color: #1a5fb4;
+  vertical-align: super;
+  margin-left: 2px;
+}
+
+/* QR Frame with scanner brackets */
+.vnpayqr-frame {
+  position: relative;
+  padding: 10px;
+  background: #fff;
+}
+
+/* Blue scanner corner L-brackets */
+.scan-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: #1a5fb4;
+  border-style: solid;
+  border-width: 0;
+  z-index: 2;
+}
+
+.scan-corner.tl { top: -3px; left: -3px; border-top-width: 4px; border-left-width: 4px; }
+.scan-corner.tr { top: -3px; right: -3px; border-top-width: 4px; border-right-width: 4px; }
+.scan-corner.bl { bottom: -3px; left: -3px; border-bottom-width: 4px; border-left-width: 4px; }
+.scan-corner.br { bottom: -3px; right: -3px; border-bottom-width: 4px; border-right-width: 4px; }
+
+/* QR Grid 29×29 */
+.vnpayqr-grid {
+  display: grid;
+  grid-template-columns: repeat(29, 8px);
+  grid-template-rows: repeat(29, 8px);
+  gap: 0.5px;
+  background: #fff;
+}
+
+.vqr-cell {
+  width: 8px;
+  height: 8px;
+}
+
+/* Scan to Pay */
+.vnpayqr-scan-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a85c8;
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+
+.btn-simulate-pay {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #c0000a, #8b0000);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(192, 0, 10, 0.35);
+}
+
+.btn-simulate-pay:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(192, 0, 10, 0.45);
+}
+
+.btn-simulate-pay:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Hủy thanh toán button - gray like real VNPAY */
+.btn-cancel-vnpay {
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  color: #555;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-cancel-vnpay:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+  color: #333;
+}
+
+
+/* ---- ATM Panel ---- */
+.atm-panel {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.atm-instruction {
+  font-size: 14px;
+  color: #444;
+  font-weight: 500;
+}
+
+.bank-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.bank-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bank-item:hover {
+  border-color: #c0000a;
+  background: #fff5f5;
+}
+
+.bank-item.selected {
+  border-color: #c0000a;
+  background: #fff5f5;
+  box-shadow: 0 0 0 3px rgba(192, 0, 10, 0.15);
+}
+
+.bank-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.bank-item span {
+  font-size: 11px;
+  text-align: center;
+  color: #444;
+}
+
+/* ---- Card Form ---- */
+.card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cf-field label {
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+}
+
+.cf-field input {
+  padding: 12px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #222;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.cf-field input:focus {
+  border-color: #c0000a;
+  box-shadow: 0 0 0 3px rgba(192, 0, 10, 0.1);
+}
+
+.cf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.card-brands {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.card-brand-badge {
+  padding: 6px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+}
+
+/* ---- Buttons ---- */
+.btn-pay {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #c0000a, #8b0000);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(192, 0, 10, 0.35);
+  font-family: inherit;
+}
+
+.btn-pay:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(192, 0, 10, 0.45);
+}
+
+.btn-pay:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-back {
+  width: 100%;
+  padding: 11px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fff;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-back:hover {
+  border-color: #c0000a;
+  color: #c0000a;
+}
+
+/* ---- OTP Panel ---- */
+.otp-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.otp-icon {
+  font-size: 48px;
+}
+
+.otp-panel h3 {
+  font-size: 18px;
+  color: #222;
+}
+
+.otp-panel p {
+  font-size: 13px;
+  color: #666;
+  max-width: 320px;
+}
+
+.otp-input {
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 8px;
+  font-weight: 700;
+}
+
+.otp-panel .cf-field {
+  width: 100%;
+}
+
+/* ---- Success Mini ---- */
+.success-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px;
+}
+
+.success-check {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00b894, #00cec9);
+  color: #fff;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 184, 148, 0.4);
+  animation: popIn 0.4s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* ---- Footer ---- */
+.payment-footer {
+  margin-top: auto;
+  padding: 14px 24px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.payment-footer strong {
+  color: #c0000a;
+  font-weight: 700;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 700px) {
+  .vnpay-body {
+    flex-direction: column;
+  }
+  .vnpay-order-panel {
+    width: 100%;
+  }
+  .bank-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

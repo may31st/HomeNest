@@ -55,12 +55,6 @@ function Login() {
       
             // Xử lý token
             sessionStorage.setItem("auth", JSON.stringify(user));
-            // const parts = response.data.token.split('.'); // Tách token thành 3 phần
-            // const payload = parts[1];
-            // const decodedPayload = JSON.parse(atob(payload)); // Giải mã Base64
-            // sessionStorage.setItem("auth", JSON.stringify(decodedPayload));
-
-           
 
             setTimeout(() => {
               navigate("/user/home", {state :user} );
