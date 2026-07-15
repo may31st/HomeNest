@@ -134,13 +134,7 @@ Renthouse/                  # Project root directory
     ```
     *The backend server runs at `http://localhost:8000`. Models are auto-synchronized with the DB.*
 
-7.  *(Optional)* Create a default Admin user for testing the Dashboard:
-    ```bash
-    node create_admin_user.js
-    ```
-    *Default credentials: Email: `admin@gmail.com` | Password: `Admin123`*
-
-8.  *(Optional)* Scrape sample data and import to MySQL:
+7.  *(Optional)* Scrape sample data and import to MySQL:
     ```bash
     # Scrapes real-world rooms to JSON:
     npm run crawl

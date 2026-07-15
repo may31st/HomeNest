@@ -13,7 +13,8 @@ import {
   Tag,
   Popconfirm,
   Modal,
-  Descriptions
+  Descriptions,
+  Checkbox
 } from "antd";
 import {
   PieChartOutlined,
@@ -199,6 +200,7 @@ const DashboardPage = () => {
   const [postStep, setPostStep] = useState(0);
   const [postForm] = Form.useForm();
   const [roomImages, setRoomImages] = useState([]);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [newPostData, setNewPostData] = useState({
     type: "",
     area: "",
@@ -208,7 +210,8 @@ const DashboardPage = () => {
     phone_number: "",
     description: "",
     bedrooms: "",
-    bathrooms: ""
+    bathrooms: "",
+    amenities: []
   });
   // Edit room listing states
   const [editForm] = Form.useForm();
@@ -577,13 +580,13 @@ const DashboardPage = () => {
         const price_per_month = postForm.getFieldValue("price_per_month");
         const bedrooms = currentType === "phongtro" ? 1 : postForm.getFieldValue("bedrooms");
         const bathrooms = currentType === "phongtro" ? 1 : postForm.getFieldValue("bathrooms");
-        setNewPostData(prev => ({ ...prev, type, area, price_per_month, bedrooms, bathrooms }));
+        const amenities = postForm.getFieldValue("amenities") || [];
+        setNewPostData(prev => ({ ...prev, type, area, price_per_month, bedrooms, bathrooms, amenities }));
       } else if (postStep === 1) {
-        await postForm.validateFields(["room_name", "address", "phone_number"]);
-        const room_name = postForm.getFieldValue("room_name");
+        await postForm.validateFields(["address", "phone_number"]);
         const address = postForm.getFieldValue("address");
         const phone_number = postForm.getFieldValue("phone_number");
-        setNewPostData(prev => ({ ...prev, room_name, address, phone_number }));
+        setNewPostData(prev => ({ ...prev, address, phone_number }));
       }
       setPostStep(prev => prev + 1);
     } catch (err) {
@@ -610,17 +613,98 @@ const DashboardPage = () => {
     setRoomImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   };
 
+  const handleGenerateWithAI = async () => {
+    const type = postForm.getFieldValue("type");
+    const area = postForm.getFieldValue("area");
+    const price_per_month = postForm.getFieldValue("price_per_month");
+    const address = postForm.getFieldValue("address");
+    const amenities = postForm.getFieldValue("amenities") || [];
+
+    if (!type || !area || !price_per_month || !address) {
+      toast.warning("Vui lòng điền đầy đủ thông tin ở Bước 1 & Bước 2 (Loại trọ, Diện tích, Giá, Địa chỉ) trước khi tạo bằng AI!");
+      return;
+    }
+
+    setIsGeneratingAI(true);
+    try {
+      const response = await axios.post("http://localhost:8000/api/v1/post/generate-ai", {
+        type,
+        area,
+        price_per_month,
+        address,
+        amenities
+      });
+
+      if (response.data && response.data.success && response.data.data) {
+        const { title, description } = response.data.data;
+        postForm.setFieldsValue({
+          room_name: title || "",
+          description: description || ""
+        });
+        toast.success("Tạo tiêu đề và mô tả bằng AI thành công!");
+      } else {
+        toast.error("Không thể tạo nội dung bằng AI. Vui lòng thử lại!");
+      }
+    } catch (error) {
+      console.error("Error generating with AI:", error);
+      toast.error(error.response?.data?.error || "Lỗi kết nối đến server AI!");
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
+
+  const handleGenerateEditWithAI = async () => {
+    const type = editForm.getFieldValue("type");
+    const area = editForm.getFieldValue("area");
+    const price_per_month = editForm.getFieldValue("price_per_month");
+    const address = editForm.getFieldValue("address");
+
+    if (!type || !area || !price_per_month || !address) {
+      toast.warning("Vui lòng điền đầy đủ Loại hình, Diện tích, Giá và Địa chỉ để tạo bằng AI!");
+      return;
+    }
+
+    setIsGeneratingAI(true);
+    try {
+      const response = await axios.post("http://localhost:8000/api/v1/post/generate-ai", {
+        type,
+        area,
+        price_per_month,
+        address,
+        amenities: []
+      });
+
+      if (response.data && response.data.success && response.data.data) {
+        const { title, description } = response.data.data;
+        editForm.setFieldsValue({
+          room_name: title || "",
+          description: description || ""
+        });
+        toast.success("Tạo tiêu đề và mô tả bằng AI thành công!");
+      } else {
+        toast.error("Không thể tạo nội dung bằng AI. Vui lòng thử lại!");
+      }
+    } catch (error) {
+      console.error("Error generating with AI for edit:", error);
+      toast.error(error.response?.data?.error || "Lỗi kết nối đến server AI!");
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
+
   const handlePostSubmit = async () => {
     try {
-      await postForm.validateFields(["description"]);
+      await postForm.validateFields(["room_name", "description"]);
     } catch (err) {
       return; // Let Ant Design show inline errors
     }
 
+    const room_name = postForm.getFieldValue("room_name");
     const description = postForm.getFieldValue("description");
 
     const finalPostData = {
       ...newPostData,
+      room_name,
       description,
       room_images: roomImages,
       email: user.email,
@@ -634,7 +718,7 @@ const DashboardPage = () => {
         postForm.resetFields();
         setPostStep(0);
         setRoomImages([]);
-        setNewPostData({ type: "", area: "", price_per_month: "", room_name: "", address: "", phone_number: "", description: "", bedrooms: "", bathrooms: "" });
+        setNewPostData({ type: "", area: "", price_per_month: "", room_name: "", address: "", phone_number: "", description: "", bedrooms: "", bathrooms: "", amenities: [] });
         setTimeout(() => {
           setActiveTab("tin_dang"); // Switch tab to show listings
         }, 1200);
@@ -1551,21 +1635,31 @@ const DashboardPage = () => {
                           </Form.Item>
                         </>
                       )}
+
+                      <Form.Item
+                        label="Tiện ích đi kèm"
+                        name="amenities"
+                      >
+                        <Checkbox.Group style={{ width: "100%" }}>
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px", marginTop: "8px" }}>
+                            <Checkbox value="Wifi">Wifi</Checkbox>
+                            <Checkbox value="Máy lạnh">Máy lạnh</Checkbox>
+                            <Checkbox value="Chỗ để xe">Chỗ để xe</Checkbox>
+                            <Checkbox value="Vệ sinh riêng">Vệ sinh riêng</Checkbox>
+                            <Checkbox value="Máy giặt">Máy giặt</Checkbox>
+                            <Checkbox value="Tủ lạnh">Tủ lạnh</Checkbox>
+                            <Checkbox value="Giường tủ">Giường tủ</Checkbox>
+                            <Checkbox value="Tự do giờ giấc">Tự do giờ giấc</Checkbox>
+                          </div>
+                        </Checkbox.Group>
+                      </Form.Item>
                     </div>
                   )}
 
-                  {/* BƯỚC 2: TÊN TRỌ & ĐỊA CHỈ */}
+                  {/* BƯỚC 2: ĐỊA CHỈ & LIÊN HỆ */}
                   {postStep === 1 && (
                     <div className="form-step-container">
-                      <h3 className="step-title">Bước 2: Tên trọ và địa chỉ chi tiết</h3>
-
-                      <Form.Item
-                        label="Tiêu đề bài đăng / Tên phòng trọ"
-                        name="room_name"
-                        rules={[{ required: true, message: "Vui lòng nhập tên phòng trọ!" }]}
-                      >
-                        <Input placeholder="Nhập tên hiển thị phòng trọ (vd: 1N1K FULL NỘI THẤT, CÓ THANG MÁY)" />
-                      </Form.Item>
+                      <h3 className="step-title">Bước 2: Địa chỉ chi tiết và liên hệ</h3>
 
                       <Form.Item
                         label="Địa chỉ cụ thể"
@@ -1594,18 +1688,75 @@ const DashboardPage = () => {
                     </div>
                   )}
 
-                  {/* BƯỚC 3: MÔ TẢ CHI TIẾT */}
+                  {/* BƯỚC 3: MÔ TẢ CHI TIẾT & HÌNH ẢNH */}
                   {postStep === 2 && (
                     <div className="form-step-container">
                       <h3 className="step-title">Bước 3: Mô tả chi tiết và hình ảnh</h3>
 
-                      <Form.Item
-                        label="Mô tả chi tiết phòng trọ (Giá điện nước, tiện ích, nội thất, giờ giấc...)"
-                        name="description"
-                        rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
+                      {/* Khung tạo tiêu đề & mô tả với AI */}
+                      <div 
+                        className="ai-generation-card"
+                        style={{
+                          backgroundColor: "#E8F5E9",
+                          borderRadius: "20px",
+                          padding: "24px",
+                          marginBottom: "24px",
+                          position: "relative"
+                        }}
                       >
-                        <Input.TextArea rows={6} placeholder="Nhập mô tả chi tiết giúp khách hàng dễ dàng nắm bắt thông tin phòng trọ của bạn..." />
-                      </Form.Item>
+                        <div 
+                          style={{ 
+                            display: "flex", 
+                            justifyContent: "space-between", 
+                            alignItems: "center", 
+                            marginBottom: "20px" 
+                          }}
+                        >
+                          <span style={{ fontSize: "16px", fontWeight: "600", color: "#1b5e20" }}>
+                            Tiêu đề và mô tả <span style={{ color: "#d32f2f" }}>*</span>
+                          </span>
+                          <Button
+                            type="primary"
+                            onClick={handleGenerateWithAI}
+                            loading={isGeneratingAI}
+                            disabled={isGeneratingAI}
+                            style={{
+                              backgroundColor: "#4caf4f",
+                              borderColor: "#4caf4f",
+                              fontWeight: "600",
+                              borderRadius: "8px",
+                              height: "36px"
+                            }}
+                          >
+                            TẠO VỚI AI
+                          </Button>
+                        </div>
+
+                        <Form.Item
+                          label={<span style={{ fontWeight: 600, color: "#2e7d32" }}>Tiêu đề <span style={{ color: "#d32f2f" }}>*</span></span>}
+                          name="room_name"
+                          rules={[{ required: true, message: "Vui lòng nhập tiêu đề bài đăng!" }]}
+                          style={{ marginBottom: "16px" }}
+                        >
+                          <Input 
+                            placeholder="Tiêu đề bài đăng hiển thị (Nhấn 'Tạo với AI' để điền tự động)" 
+                            style={{ borderRadius: "20px", padding: "10px 15px", border: "1px solid #c8e6c9" }}
+                          />
+                        </Form.Item>
+
+                        <Form.Item
+                          label={<span style={{ fontWeight: 600, color: "#2e7d32" }}>Mô tả <span style={{ color: "#d32f2f" }}>*</span></span>}
+                          name="description"
+                          rules={[{ required: true, message: "Vui lòng nhập mô tả chi tiết!" }]}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <Input.TextArea 
+                            rows={5} 
+                            placeholder="Mô tả chi tiết phòng trọ của bạn (Nhấn 'Tạo với AI' để điền tự động)" 
+                            style={{ borderRadius: "20px", padding: "10px 15px", border: "1px solid #c8e6c9" }}
+                          />
+                        </Form.Item>
+                      </div>
 
                       {/* Image Upload for Room */}
                       <div className="room-image-upload-section" style={{ marginTop: 20 }}>
@@ -2240,6 +2391,17 @@ const DashboardPage = () => {
         okButtonProps={{ style: { backgroundColor: "#4caf4f", borderColor: "#4caf4f" } }}
       >
         <Form form={editForm} layout="vertical">
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "12px" }}>
+            <Button
+              type="primary"
+              onClick={handleGenerateEditWithAI}
+              loading={isGeneratingAI}
+              disabled={isGeneratingAI}
+              style={{ backgroundColor: "#4caf4f", borderColor: "#4caf4f", borderRadius: "6px" }}
+            >
+              Tự động tạo Tiêu đề & Mô tả với AI
+            </Button>
+          </div>
           <Form.Item
             label="Tiêu đề bài đăng / Tên phòng trọ"
             name="room_name"

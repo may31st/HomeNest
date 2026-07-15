@@ -7,9 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const paymentRoute = require("./routes/paymentRoutes");
 const postRoutes = require("./routes/postRoutes");
-// const startBrowser = require('./crawl_data/browser');
-// const scrapeController = require('./crawl_data/scrapeController');
-// const importRooms = require('./crawl_data/importRoom');
+
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -114,8 +112,6 @@ app.use((err, req, res, next) => {
 server.listen(port, async () => {
   await connectDB();
   console.log(`🚀 Server is running on port ${port}`);
-  // let browser = startBrowser();
-  // scrapeController(browser);
-  // importRooms();
+
 });
 

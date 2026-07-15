@@ -117,65 +117,7 @@ const createPost = async (postData) => {
     }
   };
 
-// // Query để lấy thông tin post với đầy đủ thông tin liên quan
-// const getPostDetails = async (postId) => {
-//   try {
-//     const post = await db.RentPost.findOne({
-//       where: { id: postId },
-//       include: [
-//         {
-//           model: db.User,
-//           attributes: ["id", "email", "lastName", "phone_number"],
-//         },
-//         {
-//           model: db.Room,
-//           attributes: [
-//             "id",
-//             "room_name",
-//             "description",
-//             "price_per_month",
-//             "type",
-//             "area",
-//             "address",
-//           ],
-//         },
-//       ],
-//     });
 
-//     return post;
-//   } catch (error) {
-//     console.error("Error getting post details:", error);
-//     throw error;
-//   }
-// };
-
-// // Query để lấy danh sách posts của một user
-// const getUserPosts = async (userId) => {
-//   try {
-//     const posts = await db.RentPost.findAll({
-//       where: { user_id: userId },
-//       include: [
-//         {
-//           model: db.Room,
-//           attributes: [
-//             "room_name",
-//             "description",
-//             "price_per_month",
-//             "type",
-//             "area",
-//             "address",
-//           ],
-//         },
-//       ],
-//       order: [["created_at", "DESC"]],
-//     });
-
-//     return posts;
-//   } catch (error) {
-//     console.error("Error getting user posts:", error);
-//     throw error;
-//   }
-// };
 
 const getUserPosts = async (email) => {
   try {
